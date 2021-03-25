@@ -1,0 +1,38 @@
+version: "3"
+services:
+    db:
+        image: postgres
+        volumes:
+            - my_app_db_django:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: test
+            POSTGRES_DB: test
+            POSTGRES_PASSWORD: test
+        networks:
+            - net-my_app-db-django
+    app:
+        build: .
+        image: app
+        networks:
+            - net-my_app-db-django
+            - my_app-app-django-net
+        depends_on:
+            - db
+    gateway:
+        image: nginx
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf:ro
+        depends_on:
+            - app
+        networks:
+            - my_app-app-django-net
+        ports:
+            - 8000:8000
+volumes:
+    my_app_db_django:
+
+networks:
+    net-my_app-db-django:
+    my_app-app-django-net:
+
+
