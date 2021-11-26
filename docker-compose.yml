@@ -8,11 +8,15 @@ services:
             POSTGRES_USER: test
             POSTGRES_DB: test
             POSTGRES_PASSWORD: test
+        ports:
+            - 5439:5432
         networks:
             - net-my_app-db-django
     app:
         build: .
         image: app
+        volumes:
+            - ./app:/app
         networks:
             - net-my_app-db-django
             - my_app-app-django-net
