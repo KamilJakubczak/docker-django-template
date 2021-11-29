@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 services:
     db:
         image: postgres
@@ -13,7 +13,9 @@ services:
         networks:
             - net-my_app-db-django
     app:
-        build: .
+        build:
+            context: ./app/backend/
+            dockerfile: Dockerfile
         image: app
         volumes:
             - ./app:/app
@@ -22,6 +24,20 @@ services:
             - my_app-app-django-net
         depends_on:
             - db
+    # frontend:
+    #     restart: always
+    #     command : npm start
+    #     container_name: front
+    #     build:
+    #         context: ./app/frontend/
+    #         dockerfile: Dockerfile
+    #     ports:
+    #     - "3000:3000"
+    #     stdin_open: true
+    #     depends_on:
+    #     - app
+    #     networks:
+    #     - my_app-app-django-net
     gateway:
         image: nginx
         volumes:
