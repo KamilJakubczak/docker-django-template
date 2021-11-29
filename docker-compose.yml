@@ -18,26 +18,24 @@ services:
             dockerfile: Dockerfile
         image: app
         volumes:
-            - ./app:/app
+            - ./app/backend:/app/backend
         networks:
             - net-my_app-db-django
             - my_app-app-django-net
         depends_on:
             - db
-    # frontend:
-    #     restart: always
-    #     command : npm start
-    #     container_name: front
-    #     build:
-    #         context: ./app/frontend/
-    #         dockerfile: Dockerfile
-    #     ports:
-    #     - "3000:3000"
-    #     stdin_open: true
-    #     depends_on:
-    #     - app
-    #     networks:
-    #     - my_app-app-django-net
+    frontend:
+        build:
+            context: ./app/frontend/
+            dockerfile: Dockerfile
+        volumes:
+            - ./app/frontend:/app/frontend
+        ports:
+            - 3000:3000
+        depends_on:
+            - app
+        networks:
+            - my_app-app-django-net
     gateway:
         image: nginx
         volumes:
